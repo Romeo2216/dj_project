@@ -1,0 +1,4 @@
+Django>=5.1,<6
+psycopg[binary]>=3.2,<4
+gunicorn>=22,<23
+python-dotenv>=1.0,<2

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accueil Django</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f9fafb;
+            color: #111827;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #2563eb;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { margin: 0; font-size: 1.5rem; }
+        nav a {
+            color: white; margin-left: 1rem; text-decoration: none; font-weight: 500;
+        }
+        nav a:hover { text-decoration: underline; }
+        main { margin-top: 5rem; }
+        .btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        .btn:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mon Site Django</h1>
+        <nav>
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">Profil</a>
+                <a href="{% url 'logout_any' %}">Déconnexion</a>
+            {% else %}
+                <a href="{% url 'login' %}">Connexion</a>
+                <a href="{% url 'signup' %}">Inscription</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        <h2>Bienvenue sur ton projet Django 🚀</h2>
+        <p>
+            {% if user.is_authenticated %}
+                Bonjour <strong>{{ user.username }}</strong> !
+            {% else %}
+                Connecte-toi pour accéder à ton profil.
+            {% endif %}
+        </p>
+
+        <!-- ✅ Nouveau bouton -->
+        <p>
+            <a href="{% url 'liste_paris' %}" class="btn">Accéder aux paris</a>
+        </p>
+
+        <p><a href="/admin/">Accéder à l’administration</a></p>
+    </main>
+</body>
+</html>

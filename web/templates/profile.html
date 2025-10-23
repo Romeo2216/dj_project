@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mon profil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --bg:#f9fafb;--fg:#111827;--muted:#6b7280;--card:#ffffff;--primary:#2563eb;
+      --primary-hover:#1d4ed8;--ok:#22c55e;--danger:#ef4444;--ring:rgba(37,99,235,.15);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--fg)}
+    a{color:var(--primary);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* Header / navbar */
+    header{
+      background:var(--primary);color:#fff;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between
+    }
+    header h1{margin:0;font-size:1.2rem;font-weight:700;letter-spacing:.2px}
+    nav a, nav button{color:#fff;margin-left:1rem;font-weight:600}
+    nav button{background:none;border:none;cursor:pointer}
+    nav button:hover, nav a:hover{text-decoration:underline}
+
+    main{max-width:980px;margin:2rem auto;padding:0 1rem}
+
+    /* Layout */
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:1.25rem}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      background:var(--card);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.06);
+      padding:1.25rem 1.25rem 1rem;border:1px solid #eef2f7
+    }
+    .card h2{margin:.2rem 0 1rem 0;font-size:1.1rem}
+    .sub{color:var(--muted);font-size:.95rem}
+
+    /* Profile header block */
+    .profile{
+      display:flex;align-items:center;gap:1rem;margin-bottom:.75rem
+    }
+    .avatar{
+      width:64px;height:64px;border-radius:50%;display:grid;place-items:center;
+      background:linear-gradient(135deg,#93c5fd,#60a5fa);color:#fff;
+      font-weight:800;font-size:1.2rem;box-shadow:0 4px 12px rgba(37,99,235,.25)
+    }
+    .row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.25rem}
+    .badge{background:#eef2ff;color:#3730a3;border:1px solid #e5e7eb;padding:.15rem .5rem;border-radius:999px;font-size:.78rem}
+
+    /* Buttons */
+    .btn{
+      display:inline-block;background:var(--primary);color:#fff;border:none;border-radius:10px;
+      padding:.6rem 1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 16px var(--ring);transition:transform .05s ease, background .2s
+    }
+    .btn:hover{background:var(--primary-hover)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{background:#111827;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+    .btn.ghost{background:transparent;color:var(--primary);box-shadow:none;border:1px solid #e5e7eb}
+
+    /* Wallet */
+    .wallet{
+      display:flex;align-items:center;justify-content:space-between;gap:1rem
+    }
+    .points{
+      font-size:2rem;font-weight:900;color:#0f172a
+    }
+    .points small{font-size:.9rem;color:var(--muted);font-weight:600;margin-left:.3rem}
+
+    /* Table votes */
+    table{width:100%;border-collapse:separate;border-spacing:0 .6rem}
+    th{font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:#64748b;text-align:left;padding:.25rem .75rem}
+    td{
+      background:#fff;border:1px solid #eef2f7;border-left-width:4px;border-radius:10px;
+      padding:.75rem .75rem;vertical-align:top
+    }
+    tr td:first-child{border-left-color:#93c5fd}
+    tr td.status-oui{border-left-color:#22c55e}
+    tr td.status-non{border-left-color:#ef4444}
+    .tiny{font-size:.85rem;color:var(--muted)}
+    .nowrap{white-space:nowrap}
+    .pill{display:inline-block;padding:.1rem .5rem;border-radius:999px;font-size:.78rem;font-weight:700}
+    .pill.ok{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+    .pill.no{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+
+    /* Divider */
+    .divider{height:1px;background:#e5e7eb;margin:1rem 0}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mon profil</h1>
+    <nav>
+      <a href="/">Accueil</a>
+      <a href="{% url 'liste_paris' %}">Paris</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'password_change' %}">Modifier le mot de passe</a>
+        <a href="{% url 'logout_any' %}">Déconnexion</a>
+      {% else %}
+        <a href="{% url 'login' %}">Connexion</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    <div class="grid">
+      <!-- Colonne principale -->
+      <section class="card">
+        <div class="profile">
+          <div class="avatar">
+            {% with user.username|default:user.email as u %}
+              {% firstof u|slice:":1"|upper "U" %}  <!-- initiale -->
+            {% endwith %}
+          </div>
+          <div>
+            <h2 style="margin:.1rem 0 .2rem 0;">{{ user.get_full_name|default:user.username }}</h2>
+            <div class="sub">
+              {{ user.email|default:"(email non renseigné)" }}
+              <span class="badge">Membre depuis {{ user.date_joined|date:"d/m/Y" }}</span>
+              {% if user.is_staff %}<span class="badge">Staff</span>{% endif %}
+              {% if user.is_superuser %}<span class="badge">Superuser</span>{% endif %}
+            </div>
+            <div class="row">
+              <a class="btn ghost" href="{% url 'password_change' %}">Changer de mot de passe</a>
+              <a class="btn" href="{% url 'liste_paris' %}">Voir les paris</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>Mes derniers votes</h2>
+        {% if user.votes.all %}
+          <table>
+            <thead>
+              <tr>
+                <th>Pari</th>
+                <th>Mon vote</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for v in user.votes.all|dictsortreversed:"created_at"|slice:":8" %}
+              <tr>
+                <td class="{% if v.choice == 'oui' %}status-oui{% else %}status-non{% endif %}">
+                  {{ v.pari.description|truncatechars:90 }}
+                </td>
+                <td>
+                  {% if v.choice == 'oui' %}
+                    <span class="pill ok">OUI</span>
+                  {% else %}
+                    <span class="pill no">NON</span>
+                  {% endif %}
+                </td>
+                <td class="nowrap tiny">{{ v.created_at|date:"d/m/Y H:i" }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="3" class="tiny">Aucun vote pour le moment.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="sub">Aucun vote pour le moment.</p>
+        {% endif %}
+      </section>
+
+      <!-- Colonne latérale -->
+      <aside class="card">
+        <h2>Portefeuille</h2>
+        <div class="wallet">
+          <div class="points">
+            {{ user.wallet.points|default:"100" }} <small>points</small>
+          </div>
+          <div class="row">
+            <!-- liens simples (pas d’endpoint custom requis) -->
+            <a class="btn ghost" href="{% url 'liste_paris' %}">Utiliser</a>
+            <a class="btn secondary" href="/admin/core/wallet/">Admin</a>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>Raccourcis</h2>
+        <p class="sub">
+          • <a href="{% url 'liste_paris' %}">Parcourir les paris</a><br/>
+          • <a href="/admin/">Administration</a><br/>
+          • <a href="{% url 'password_change' %}">Modifier mon mot de passe</a>
+        </p>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

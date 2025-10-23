@@ -1,0 +1,16 @@
+services:
+  web:
+    build: ./web
+    command: /app/entrypoint.sh
+    volumes:
+      - ./web:/app
+      - static_volume:/app/staticfiles
+      - sqlite_data:/data 
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+volumes:
+  static_volume:
+  sqlite_data:

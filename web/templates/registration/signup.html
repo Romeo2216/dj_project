@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f9fafb;
+            color: #111827;
+            text-align: center;
+            margin-top: 5rem;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        input {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            width: 100%;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+        }
+        button:hover { background-color: #1d4ed8; }
+        a { color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>Créer un compte</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">S'inscrire</button>
+    </form>
+    <p><a href="{% url 'login' %}">Déjà un compte ? Se connecter</a></p>
+    <p><a href="/">Retour à l'accueil</a></p>
+</body>
+</html>
