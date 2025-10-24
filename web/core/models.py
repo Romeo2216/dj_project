@@ -94,3 +94,5 @@ class Wallet(models.Model):
         """Fixe le solde à une valeur précise."""
         type(self).objects.filter(pk=self.pk).update(points=max(0, value))
         self.refresh_from_db()
+
+

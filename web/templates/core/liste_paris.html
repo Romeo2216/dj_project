@@ -141,7 +141,11 @@
   <main>
     {% if user.is_authenticated %}
       <p class="solde">Solde : {{ user.wallet.points }} points</p>
+      <div style="text-align:right; margin-bottom:1rem;">
+        <a href="{% url 'creer_pari' %}" class="btn validate" style="background:#2563eb;padding:.5rem 1rem;border-radius:8px;color:white;text-decoration:none;font-weight:600;">➕ Nouveau pari</a>
+      </div>
     {% endif %}
+
 
     {% for pari in paris %}
       <div class="pari">

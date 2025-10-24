@@ -3,6 +3,17 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from .models import Pari, Vote
 
+
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from .models import Wallet
+
+def index(request):
+    # On récupère tous les utilisateurs avec leurs points
+    users = User.objects.select_related("wallet").order_by("-wallet__points")
+    return render(request, "index.html", {"users": users})
+
+
 def liste_paris(request):
     paris = Pari.objects.all().order_by("-created_at")
 
@@ -183,3 +194,19 @@ def resolve_pari(request, pari_id, result):
         f"Pari #{pari.id} validé ({result.upper()}) — gains redistribués selon la cote 1/probabilité."
     )
     return redirect("liste_paris")
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import PariForm
+
+@login_required
+def creer_pari(request):
+    if request.method == "POST":
+        form = PariForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("liste_paris")
+    else:
+        form = PariForm()
+    return render(request, "core/creer_pari.html", {"form": form})

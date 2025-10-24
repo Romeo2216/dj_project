@@ -34,7 +34,6 @@ def signup(request):
 
 
 urlpatterns = [
-    path("", index, name="index"),
     path("", include("core.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),  # ✅ ajoute /login/ et /logout/
