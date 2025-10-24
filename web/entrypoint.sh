@@ -62,8 +62,8 @@ fi
 # Choix runserver (dev) vs gunicorn (prod)
 if [ "${DEBUG}" = "1" ]; then
   echo "🚀 Démarrage serveur dev"
-  exec python manage.py runserver 0.0.0.0:8000
+  exec python manage.py runserver 0.0.0.0:80
 else
   echo "🚀 Démarrage gunicorn (prod)"
-  exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3
+  exec gunicorn config.wsgi:application --bind 0.0.0.0:80 --workers 3
 fi
