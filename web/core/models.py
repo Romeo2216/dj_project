@@ -74,7 +74,7 @@ class Wallet(models.Model):
         on_delete=models.CASCADE,
         related_name="wallet"
     )
-    points = models.PositiveIntegerField(default=100)
+    points = models.PositiveIntegerField(default=1000)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
